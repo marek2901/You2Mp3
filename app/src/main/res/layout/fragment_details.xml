@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.dziewit.marek.you2mp3.fragments.InputUrlFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/container_background"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/video_title_text_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ifYouSeeThisTextSomethingIsWrong"
+            android:textSize="20sp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_button_text" />
+    </LinearLayout>
+
+</LinearLayout>
+

@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dziewit.marek.you2mp3.fragments.InputUrlFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/progress_container"
+            android:layout_width="match_parent"
+            android:layout_height="99dp"
+            android:background="@drawable/container_background"
+            android:visibility="invisible">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:progressDrawable="@drawable/circular_progress_bar" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/text_linear_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/container_background"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/editTextUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/paste_yt_url_message"
+                android:inputType="textUri" />
+
+            <Button
+                android:id="@+id/download_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/download_button_text" />
+        </LinearLayout>
+    </FrameLayout>
+
+
+</LinearLayout>
