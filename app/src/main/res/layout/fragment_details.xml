@@ -12,6 +12,11 @@
         android:background="@drawable/container_background"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200sp"
+            android:id="@+id/thumbnail_preview" />
+
         <EditText
             android:id="@+id/video_title_text_edit_text"
             android:layout_width="match_parent"

@@ -1,6 +1,8 @@
 package com.dziewit.marek.you2mp3.video_info;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class VideoInfoModel {
     private boolean isOk;
 
@@ -8,8 +10,20 @@ public class VideoInfoModel {
         this.isOk = true;
     }
 
+    @SerializedName("title")
     private String videoTilte;
+
     private String downloadUrl;
+
+    private String thumbnail_url;
+
+    public String getThumbnail_url() {
+        return thumbnail_url;
+    }
+
+    public void setThumbnail_url(String thumbnail_url) {
+        this.thumbnail_url = thumbnail_url;
+    }
 
     public String getDownloadUrl() {
         return downloadUrl;

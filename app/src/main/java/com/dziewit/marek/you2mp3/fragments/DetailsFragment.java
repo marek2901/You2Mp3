@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.dziewit.marek.you2mp3.R;
 import com.dziewit.marek.you2mp3.SaveButtonInterface;
 import com.dziewit.marek.you2mp3.video_info.VideoInfoModel;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -43,6 +45,8 @@ public class DetailsFragment extends Fragment {
         }
     }
 
+    @InjectView(R.id.thumbnail_preview)
+    ImageView thumbnailView;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -52,6 +56,11 @@ public class DetailsFragment extends Fragment {
                         , VideoInfoModel.class
                 );
         titleEditText.setText(model.getVideoTilte());
+
+        Picasso.with(getActivity())
+                .load(model.getThumbnail_url())
+                .fit()
+                .into(thumbnailView);
     }
 
     @OnClick(R.id.save_button)
