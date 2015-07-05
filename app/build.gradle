@@ -9,13 +9,33 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
+        multiDexEnabled true
         versionName "1.0"
+    }
+    configurations {
+        all {
+            exclude module: 'httpclient'
+            exclude module: 'httpcore'
+            exclude module: 'xmlpull'
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
     }
 }
 
@@ -24,8 +44,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.google.code.gson:gson:2.3'
-//    compile 'com.github.axet:vget:1.1.23'
+    compile 'com.github.axet:vget:1.1.23'
     compile 'com.squareup.retrofit:retrofit:1.8.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.hiteshsondhi88.libffmpeg:FFmpegAndroid:0.2.5'
+    compile 'net.rdrei.android.dirchooser:library:2.1@aar'
 }

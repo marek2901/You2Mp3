@@ -10,15 +10,14 @@ import android.util.Log;
 
 import com.dziewit.marek.you2mp3.R;
 import com.dziewit.marek.you2mp3.video_info.VideoInfoModel;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
-public class YouToMp3Service extends IntentService {
+public class YouToMp3Service extends IntentService implements AppManagedDownloadHandler {
+    public static final String TAG = YouToMp3Service.class.getSimpleName();
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
 
@@ -38,34 +37,51 @@ public class YouToMp3Service extends IntentService {
     }
 
     public void DownloadFile(String fileURL, String fileName) {
+
+        String RootDir = Environment.getExternalStorageDirectory()
+                + File.separator + "YouTuMp3Cache";
+        File RootFile = new File(RootDir);
+
         try {
-            String RootDir = Environment.getExternalStorageDirectory()
-                    + File.separator + "Video";
-            File RootFile = new File(RootDir);
-            RootFile.mkdir();
-            // File root = Environment.getExternalStorageDirectory();
-            URL u = new URL(fileURL);
-            HttpURLConnection c = (HttpURLConnection) u.openConnection();
-            c.setRequestMethod("GET");
-            c.setDoOutput(true);
-            c.connect();
-            FileOutputStream f = new FileOutputStream(new File(RootFile,
-                    fileName));
-            InputStream in = c.getInputStream();
+            if (RootFile.mkdir())
+                new AppManagedDownload(this).run(fileURL, RootFile);
+            else
+                throw new Exception("Can't make this file, probably already exist");
 
-            int max = c.getContentLength();
 
-            byte[] buffer = new byte[1024];
-            int len1 = 0;
+            FFmpeg fFmpeg = FFmpeg.getInstance(getBaseContext());
 
-            while ((len1 = in.read(buffer)) > 0) {
-                f.write(buffer, 0, len1);
-                updateNotificationProgress(max, len1);
-            }
-            f.close();
-            doneMessage("DownloadCompleted");
+
+            fFmpeg.execute("cmd", new FFmpegExecuteResponseHandler() {
+
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+
+                @Override
+                public void onSuccess(String s) {
+
+                }
+
+                @Override
+                public void onProgress(String s) {
+
+                }
+
+                @Override
+                public void onFailure(String s) {
+
+                }
+            });
+
         } catch (Exception e) {
-
+            doneMessage("Something went wrong file not downloaded :( ");
             Log.d("Error....", e.toString());
         }
 
@@ -96,5 +112,27 @@ public class YouToMp3Service extends IntentService {
     private VideoInfoModel getDataFromBundle(Intent intent) {
         String jsonWithVideoInfo = intent.getStringExtra(VideoInfoModel.class.getSimpleName());
         return new Gson().fromJson(jsonWithVideoInfo, VideoInfoModel.class);
+    }
+
+    @Override
+    public void onMessage(String message) {
+        Log.d(TAG, message);
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+        Log.d(TAG, errorMessage);
+        doneMessage(errorMessage);
+    }
+
+    @Override
+    public void onSuccess(String successMessage) {
+        Log.d(TAG, successMessage);
+        doneMessage(successMessage);
+    }
+
+    @Override
+    public void onProgressUpdated(long progress, long max) {
+        updateNotificationProgress((int) max, (int) progress);
     }
 }
