@@ -26,7 +26,7 @@ public class AppManagedDownload {
         this.handler = handler;
     }
 
-    public void run(String url, File path) {
+    public void run(String url, File path, final String filename) {
         try {
             AtomicBoolean stop = new AtomicBoolean(false);
             Runnable notify = new Runnable() {
@@ -34,6 +34,7 @@ public class AppManagedDownload {
                 public void run() {
                     VideoInfo i1 = info;
                     DownloadInfo i2 = i1.getInfo();
+                    i2.setContentFilename(filename);
 
                     switch (i1.getState()) {
                         case EXTRACTING:
@@ -41,10 +42,10 @@ public class AppManagedDownload {
                         case DONE:
                             if (i1 instanceof YoutubeInfo) {
                                 YoutubeInfo i = (YoutubeInfo) i1;
-                                handler.onSuccess(i1.getState() + " " + i.getVideoQuality());
+                                handler.onDownloadSuccess(i1.getTitle() + " " + i1.getState() + " " + i.getVideoQuality(), i1.getTitle());
                             } else if (i1 instanceof VimeoInfo) {
                                 VimeoInfo i = (VimeoInfo) i1;
-                                handler.onSuccess(i1.getState() + " " + i.getVideoQuality());
+                                handler.onDownloadSuccess(i1.getState() + " " + i.getVideoQuality(), i1.getTitle());
                             } else {
                                 handler.onError("downloading unknown quality");
                             }
@@ -90,9 +91,7 @@ public class AppManagedDownload {
             info = user.info(web);
 
             VGet v = new VGet(info, path);
-
-
-            v.extract(user, stop, notify);
+//            v.extract(user, stop, notify);
 
             v.download(user, stop, notify);
         } catch (Exception e) {

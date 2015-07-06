@@ -2,7 +2,7 @@ package com.dziewit.marek.you2mp3.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class You2mp3 extends ActionBarActivity implements VideoInfoResultHandler, SaveButtonInterface {
+public class You2mp3 extends AppCompatActivity implements VideoInfoResultHandler, SaveButtonInterface {
     @InjectView(R.id.tool_bar)
     Toolbar toolbar;
 
@@ -50,6 +50,8 @@ public class You2mp3 extends ActionBarActivity implements VideoInfoResultHandler
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        startActivity(new Intent(this, YouMp3SettingsActivity.class));
+
         return true;
     }
 

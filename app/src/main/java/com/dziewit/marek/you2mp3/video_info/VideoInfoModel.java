@@ -3,6 +3,8 @@ package com.dziewit.marek.you2mp3.video_info;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class VideoInfoModel {
     private boolean isOk;
 
@@ -34,10 +36,30 @@ public class VideoInfoModel {
     }
 
     public String getVideoTilte() {
-        String trimmedVideoTitle = videoTilte.replaceAll("\\s+", "");
-        trimmedVideoTitle = trimmedVideoTitle.replaceAll("[^a-zA-Z0-9.-]", "_");
+        return replaceBadChars(videoTilte);
+    }
 
-        return trimmedVideoTitle;
+    private String replaceBadChars(String f) {
+        String replace = "";
+        f = f.replaceAll("/", replace);
+        f = f.replaceAll("\\\\", replace);
+        f = f.replaceAll(":", replace);
+        f = f.replaceAll("\\?", replace);
+        f = f.replaceAll("\\\"", replace);
+        f = f.replaceAll("\\*", replace);
+        f = f.replaceAll("<", replace);
+        f = f.replaceAll(">", replace);
+        f = f.replaceAll("\\|", replace);
+        f = f.trim();
+        f = StringUtils.removeEnd(f, ".");
+        f = f.trim();
+
+        String ff;
+        while (!(ff = f.replaceAll("  ", " ")).equals(f)) {
+            f = ff;
+        }
+
+        return f;
     }
 
     public void setVideoTilte(String videoTilte) {

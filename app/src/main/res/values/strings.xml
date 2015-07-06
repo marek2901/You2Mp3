@@ -11,4 +11,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save_button_text">SAVE</string>
     <string name="download_started_toast">Download Started, mp3 will show in selected dir</string>
+    <string name="title_activity_you_mp3_settings">YouMp3SettingsActivity</string>
+    <string name="change_dir_button_text">Change</string>
+    <string name="dir_succes_message">You Succesfuly set directory, now you can download videos</string>
 </resources>

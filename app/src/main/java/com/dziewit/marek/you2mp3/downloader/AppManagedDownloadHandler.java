@@ -6,7 +6,7 @@ public interface AppManagedDownloadHandler {
 
     void onError(String errorMessage);
 
-    void onSuccess(String successMessage);
+    void onDownloadSuccess(String successMessage, String fileName);
 
     void onProgressUpdated(long progress, long max);
 }
