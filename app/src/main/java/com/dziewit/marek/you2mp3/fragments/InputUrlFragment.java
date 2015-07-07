@@ -34,6 +34,22 @@ public class InputUrlFragment extends Fragment implements VideoInfoResultHandler
         return view;
     }
 
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadVideoInfoIfBundleUrlProvided();
+    }
+
+    private void loadVideoInfoIfBundleUrlProvided() {
+        try {
+            String url = this.getArguments().getString(VideoInfoModel.class.getSimpleName());
+            loadVideoData(url);
+        } catch (Exception e) {
+            //nothing get nothing returned
+        }
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -48,6 +64,10 @@ public class InputUrlFragment extends Fragment implements VideoInfoResultHandler
     @OnClick(R.id.download_button)
     public void downloadInfo() {
         String url = urlEditText.getText().toString();
+        loadVideoData(url);
+    }
+
+    private void loadVideoData(String url) {
         if (!url.isEmpty()) {
             VideoInfoAsyncProvider provider = new VideoInfoAsyncProvider(this);
             provider.execute(url);

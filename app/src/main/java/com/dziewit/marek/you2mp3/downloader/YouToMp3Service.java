@@ -11,20 +11,25 @@ import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.dziewit.marek.you2mp3.FFMPegBinaryLoaderHandlerWrapper;
 import com.dziewit.marek.you2mp3.R;
 import com.dziewit.marek.you2mp3.activities.YouMp3SettingsActivity;
 import com.dziewit.marek.you2mp3.video_info.VideoInfoModel;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.google.gson.Gson;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
 
-public class YouToMp3Service extends IntentService implements AppManagedDownloadHandler, FFmpegExecuteResponseHandler {
+
+public class YouToMp3Service extends IntentService
+        implements AppManagedDownloadHandler, FFmpegExecuteResponseHandler {
+
+
     public static final String TAG = YouToMp3Service.class.getSimpleName();
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
@@ -59,7 +64,6 @@ public class YouToMp3Service extends IntentService implements AppManagedDownload
         } catch (Exception e) {
             doneMessage("Something went wrong file not downloaded :( ");
             Log.d("Error....", e.toString());
-            onFinish();
         }
 
     }
@@ -110,18 +114,39 @@ public class YouToMp3Service extends IntentService implements AppManagedDownload
         SharedPreferences preferences =
                 getSharedPreferences(YouMp3SettingsActivity.PREFERENCES_NAME, Activity.MODE_PRIVATE);
 
-        filename = filename.replaceAll(" ", Matcher.quoteReplacement("\\"));
+        String rawFileName = filename;
+        filename = filename.replaceAll(" ", "");
 
         String targetBaseDir = preferences.getString(YouMp3SettingsActivity.PREFS_DIR_VALUE, null);
+        String rawSource = rootFile.getAbsolutePath() + File.separator + rawFileName + ".mp4";
         String source = rootFile.getAbsolutePath() + File.separator + filename + ".mp4";
-        String target = targetBaseDir + File.separator + filename + ".mp3";
+        String target = targetBaseDir + File.separator + filename + ".acc";
+//        String target = rootFile.getAbsolutePath() + File.separator + filename + ".acc";
 
         FFmpeg fFmpeg = FFmpeg.getInstance(getBaseContext());
 
-//        ffmpeg -i video.mp4 -b:a 192K -vn music.mp3
-        String cmd = "-i " + source + " -b:a 192K -vn " + target;
+//        ffmpeg -i video.mp4 -strict -2 sample.aac
+        final String cmd = "-i " + source + " -strict -2 " + target;
+        final YouToMp3Service parent = this;
         try {
-            fFmpeg.execute(cmd, this);
+            Process process = Runtime.getRuntime().exec(new String[]{"mv", rawSource, source});
+            process.waitFor();
+
+            fFmpeg.loadBinary(new FFMPegBinaryLoaderHandlerWrapper() {
+                @Override
+                public void binaryLoaded() {
+                    try {
+                        FFmpeg.getInstance(getBaseContext()).execute(cmd, parent);
+                    } catch (FFmpegCommandAlreadyRunningException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+
+                @Override
+                public void binaryLoadFailed() {
+                    doneMessage("Something went wrong");
+                }
+            });
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             doneMessage("Cant convert");
@@ -143,8 +168,9 @@ public class YouToMp3Service extends IntentService implements AppManagedDownload
 
     @Override
     public void onProgress(String s) {
-        onGoingMessage(s);
+        Log.d(TAG, "on progress kurwa " + s);
     }
+
 
     @Override
     public void onFailure(String s) {

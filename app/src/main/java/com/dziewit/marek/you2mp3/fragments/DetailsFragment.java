@@ -47,6 +47,7 @@ public class DetailsFragment extends Fragment {
 
     @InjectView(R.id.thumbnail_preview)
     ImageView thumbnailView;
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

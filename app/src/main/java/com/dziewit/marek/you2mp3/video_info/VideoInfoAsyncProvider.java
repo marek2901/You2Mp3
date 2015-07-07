@@ -17,7 +17,7 @@ public class VideoInfoAsyncProvider extends AsyncTask<String, Void, VideoInfoMod
 
     @Override
     protected VideoInfoModel doInBackground(String... urls) {
-        urls[0] = "https://www.youtube.com/watch?v=3Y6BpA5hwKA";
+//        urls[0] = "https://www.youtube.com/watch?v=3Y6BpA5hwKA";
         VideoInfoModel model = new VideoInfoModel();
         try {
 

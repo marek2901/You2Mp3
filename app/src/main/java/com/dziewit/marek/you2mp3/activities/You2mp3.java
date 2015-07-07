@@ -25,6 +25,7 @@ public class You2mp3 extends AppCompatActivity implements VideoInfoResultHandler
     @InjectView(R.id.tool_bar)
     Toolbar toolbar;
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +36,52 @@ public class You2mp3 extends AppCompatActivity implements VideoInfoResultHandler
         commitStartFragment();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent != null)
+            setIntent(intent);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                handleSendText(intent); // Handle text being sent
+            }
+        } else {
+            // Handle other intents, such as being started from the home screen
+        }
+    }
+
+    private void handleSendText(Intent intent) {
+        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (sharedText != null) {
+            commitStartFragment(sharedText);
+            intent.getExtras().remove(Intent.EXTRA_TEXT);
+        }
+    }
+
     private void commitStartFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_fragment_container, new InputUrlFragment())
+                .commit();
+    }
+
+    private void commitStartFragment(String url) {
+        InputUrlFragment fragment = new InputUrlFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(VideoInfoModel.class.getSimpleName(), url);
+        fragment.setArguments(bundle);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_fragment_container, fragment)
                 .commit();
     }
 

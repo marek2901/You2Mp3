@@ -26,7 +26,7 @@ public class AppManagedDownload {
         this.handler = handler;
     }
 
-    public void run(String url, File path, final String filename) {
+    public VideoInfo run(String url, File path, final String filename) {
         try {
             AtomicBoolean stop = new AtomicBoolean(false);
             Runnable notify = new Runnable() {
@@ -97,5 +97,6 @@ public class AppManagedDownload {
         } catch (Exception e) {
             handler.onError(e.getMessage());
         }
+        return info;
     }
 }
