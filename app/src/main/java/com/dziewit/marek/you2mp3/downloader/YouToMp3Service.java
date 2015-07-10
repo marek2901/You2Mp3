@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 
 public class YouToMp3Service extends IntentService
@@ -158,12 +157,6 @@ public class YouToMp3Service extends IntentService
     @Override
     public void onSuccess(String s) {
         doneMessage(s);
-        try {
-            FileUtils.deleteDirectory(rootFile);
-        } catch (IOException e) {
-            Log.d(TAG, e.getMessage());
-            onFinish();
-        }
     }
 
     @Override
@@ -175,12 +168,6 @@ public class YouToMp3Service extends IntentService
     @Override
     public void onFailure(String s) {
         doneMessage(s);
-        try {
-            FileUtils.deleteDirectory(rootFile);
-        } catch (IOException e) {
-            onFinish();
-            Log.e(TAG, e.getMessage());
-        }
     }
 
     @Override
